@@ -1,2 +1,1 @@
-alias Xxo.{Game, GameSupervisor, Board}
-
+alias Xxo.{GameServer, GameSupervisor, Board}

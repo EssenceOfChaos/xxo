@@ -1,7 +1,11 @@
 defmodule Xxo.GameTest do
-    use ExUnit.Case
+  @moduledoc """
+  Testing the Board module.
+  """
+  use ExUnit.Case
+  alias Xxo.Board
 
-    test "write game test here" do
-     # test logic here
-    end
- end
+  test "write game test here" do
+    # test logic here
+  end
+end

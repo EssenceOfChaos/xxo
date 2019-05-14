@@ -4,15 +4,12 @@ defmodule Xxo do
   """
 
   @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Xxo.hello()
-      :world
-
+  Generates a unique game id
   """
-  def hello do
-    :world
+  def generate_game_id() do
+    DateTime.utc_now()
+    |> DateTime.to_unix()
+    |> Integer.to_string()
+    |> Base.encode64()
   end
 end

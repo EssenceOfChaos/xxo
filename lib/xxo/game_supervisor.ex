@@ -1,36 +1,42 @@
 defmodule Xxo.GameSupervisor do
-   alias Xxo.Game
+  @moduledoc """
+  The Game Supervisor, a dynamic supervisor providing fault tolerance
+  """
+  alias Xxo.GameServer
 
-   use DynamicSupervisor
+  use DynamicSupervisor
 
-   def start_link(_arg) do
+  def start_link(_arg) do
     DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
-   end
+  end
 
-   @impl true
-   def init(:ok) do
+  @impl true
+  def init(:ok) do
     DynamicSupervisor.init(strategy: :one_for_one)
-   end
+  end
 
-   def create_game(game_id) do
+  def create_game() do
+    game_id = Xxo.generate_game_id()
+
     child_spec = %{
-        id: Game,
-        start: {Game, :start_link, [game_id]},
-        restart: :temporary
+      id: Game,
+      start: {GameServer, :start_link, [game_id]},
+      restart: :temporary
     }
-    DynamicSupervisor.start_child(__MODULE__, child_spec)
-   end
 
-   def game_exists?(game_id) do
+    DynamicSupervisor.start_child(__MODULE__, child_spec)
+  end
+
+  def game_exists?(game_id) do
     case Registry.lookup(:game_server_registry, game_id) do
       [] -> false
       _ -> true
     end
   end
 
-   ## Utility Functions ##
-    # Terminate a Game process and remove it from supervision
-   def remove_game(game_pid) do
+  ## Utility Functions ##
+  # Terminate a Game process and remove it from supervision
+  def remove_game(game_pid) do
     DynamicSupervisor.terminate_child(__MODULE__, game_pid)
   end
 
@@ -43,5 +49,4 @@ defmodule Xxo.GameSupervisor do
   def count_children do
     DynamicSupervisor.count_children(__MODULE__)
   end
-
 end
