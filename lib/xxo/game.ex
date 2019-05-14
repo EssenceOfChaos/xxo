@@ -1,16 +1,10 @@
 defmodule Xxo.Game do
-  @moduledoc """
-  The Game module is responsible for starting/stopping new games.
-  """
-  use GenServer
 
-  def start_link(opts \\ []) do
-    GenServer.start_link(__MODULE__, opts)
-  end
+   alias Xxo.Board
 
-
-  def init(opts \\ %{}) do
-    {:ok, opts}
-  end
-
+   defstruct board: %Board{},
+             x: nil,
+             o: nil,
+             finished: false,
+             winner: nil
 end

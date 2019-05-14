@@ -1,2 +1,2 @@
-alias Xxo.Game
-alias Xxo.Board
+alias Xxo.{Game, GameSupervisor, Board}
+
