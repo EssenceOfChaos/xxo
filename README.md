@@ -1,6 +1,6 @@
 # Xxo
 
-**TODO: Add description**
+[![CircleCI](https://circleci.com/gh/EssenceOfChaos/xxo.svg?style=svg)](https://circleci.com/gh/EssenceOfChaos/xxo)
 
 ## Installation
 
