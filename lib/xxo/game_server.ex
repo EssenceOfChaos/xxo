@@ -3,34 +3,32 @@ defmodule Xxo.GameServer do
   The Game module is responsible for starting/stopping new games.
   """
   use GenServer
+  alias Xxo.{Game}
 
   #######################################################################
   #####################   Client Callbacks   ############################
   #######################################################################
-  def start_link(game_id) do
-    GenServer.start_link(__MODULE__, [], name: via_tuple(game_id))
+  def start_link(player) do
+    GenServer.start_link(__MODULE__, player, name: __MODULE__)
   end
 
-  def add_message(game_id, message) do
-    # And the `GenServer` callbacks will accept this tuple the same way it
-    # accepts a `pid` or an atom.
-    GenServer.cast(via_tuple(game_id), {:add_message, message})
+  #   def player_move(pid, player, move) do
+  #     GenServer.cast(via_tuple(pid), {:player_move, player, move})
+  #   end
+  def player_move(player, move) do
+    GenServer.cast(__MODULE__, {:player_move, player, move})
   end
 
-  def get_messages(game_id) do
-    GenServer.call(via_tuple(game_id), :get_messages)
+  def get_state() do
+    GenServer.call(__MODULE__, :get_state)
   end
 
-  def get_state(name) do
-    GenServer.call(name, :get_state)
+  def reset_state(__MODULE__) do
+    GenServer.cast(__MODULE__, :reset_state)
   end
 
-  def reset_state(name) do
-    GenServer.cast(name, :reset_state)
-  end
-
-  def stop(name) do
-    GenServer.cast(name, :stop)
+  def stop(__MODULE__) do
+    GenServer.cast(__MODULE__, :stop)
   end
 
   #######################################################################
@@ -38,30 +36,22 @@ defmodule Xxo.GameServer do
   #######################################################################
 
   @impl true
-  def init(_arg) do
-    {:ok, []}
-  end
-
-  @impl true
-  def handle_call(:get_messages, _from, messages) do
-    {:reply, messages, messages}
+  def init(player) do
+    {:ok, %Game{player: player}}
   end
 
   @impl true
   def handle_call(:get_state, _from, state) do
-    # action, response, new state(no change)
     {:reply, state, state}
   end
 
   @impl true
-  def handle_cast({:add_message, new_message}, messages) do
-    {:noreply, [new_message | messages]}
+  def handle_cast({:player_move, player, new_move}, state = %Game{finished: false}) do
+    {:noreply, Map.update!(state, new_move, update_state(state, player, new_move))}
   end
 
   @impl true
   def handle_cast(:reset_state, _state) do
-    # note: no response
-    # action, current state(set to empty map)
     {:noreply, %{}}
   end
 
@@ -88,17 +78,8 @@ defmodule Xxo.GameServer do
   #####################   Private Functions   ###########################
   #######################################################################
 
-  defp via_tuple(game_id) do
-    {:via, :gproc, {:n, :l, {:game_id, game_id}}}
+  defp update_state(state, player, new_move) do
+    board = state.board.positions
+    Map.update!(board, new_move, fn _ -> player end)
   end
-
-  #   defp update_state(old_state, stock, price) do
-  #     case Map.has_key?(old_state, stock) do
-  #       true ->
-  #         Map.update!(old_state, stock, price)
-
-  #       false ->
-  #         Map.put_new(old_state, stock, price)
-  #     end
-  #   end
 end

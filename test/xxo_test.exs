@@ -5,8 +5,8 @@ defmodule XxoTest do
   use ExUnit.Case
   doctest Xxo
 
-  test "greets the world" do
-    id = Xxo.generate_game_id()
-    assert is_binary(id)
+  test "starts a new game with a name" do
+    {:ok, pid} = Xxo.new_game("freddy")
+    assert is_pid(pid)
   end
 end
