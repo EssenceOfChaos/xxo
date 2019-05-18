@@ -5,7 +5,7 @@ defmodule Xxo do
   alias Xxo.GameSupervisor
 
   @doc """
-  Generates a unique game id
+  Generates a new game under supervision
   """
-  defdelegate new_game(initiating_player), to: GameSupervisor, as: :create_game
+  defdelegate new_game(game_name), to: GameSupervisor, as: :create_game
 end

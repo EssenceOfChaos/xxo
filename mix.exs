@@ -1,4 +1,7 @@
 defmodule Xxo.MixProject do
+  @moduledoc """
+  The application entry point and dependency list.
+  """
   use Mix.Project
 
   def project do
@@ -22,7 +25,6 @@ defmodule Xxo.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:gproc, "~> 0.8.0"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
     ]
   end

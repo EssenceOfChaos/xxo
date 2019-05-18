@@ -15,10 +15,10 @@ defmodule Xxo.GameSupervisor do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
 
-  def create_game(player) do
+  def create_game(game_name) do
     child_spec = %{
       id: Game,
-      start: {GameServer, :start_link, [player]},
+      start: {GameServer, :start_link, [game_name]},
       restart: :temporary
     }
 

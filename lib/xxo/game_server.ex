@@ -4,40 +4,52 @@ defmodule Xxo.GameServer do
   """
   use GenServer
   alias Xxo.{Game}
+  require Logger
 
-  #######################################################################
+  @game_server_registry :game_server_registry
+
   #####################   Client Callbacks   ############################
-  #######################################################################
-  def start_link(player) do
-    GenServer.start_link(__MODULE__, player, name: __MODULE__)
+  def start_link(game_name) do
+    GenServer.start_link(__MODULE__, game_name, name: via_tuple(game_name))
   end
 
-  #   def player_move(pid, player, move) do
-  #     GenServer.cast(via_tuple(pid), {:player_move, player, move})
-  #   end
-  def player_move(player, move) do
-    GenServer.cast(__MODULE__, {:player_move, player, move})
+  # via_tuple - private function used to register players in the GameServer Registry
+  defp via_tuple(game_name) do
+    {:via, Registry, {@game_server_registry, game_name}}
   end
 
-  def get_state() do
-    GenServer.call(__MODULE__, :get_state)
+  def player_move(game_name, player, square) do
+    GenServer.cast(via_tuple(game_name), {:player_move, player, square})
   end
 
-  def reset_state(__MODULE__) do
-    GenServer.cast(__MODULE__, :reset_state)
+  def get_state(game_name) do
+    GenServer.call(via_tuple(game_name), :get_state)
   end
 
-  def stop(__MODULE__) do
-    GenServer.cast(__MODULE__, :stop)
+  def reset_state(game_name) do
+    GenServer.cast(via_tuple(game_name), :reset_state)
   end
 
-  #######################################################################
+  def stop(game_name) do
+    GenServer.cast(via_tuple(game_name), :stop)
+  end
+
+  @doc """
+  Returns the pid for the `game_name` stored in the registry
+  """
+  def whereis(game_name) do
+    case Registry.lookup(@game_server_registry, game_name) do
+      [{pid, _}] -> pid
+      [] -> nil
+    end
+  end
+
   #####################   Server Callbacks   ############################
-  #######################################################################
 
   @impl true
-  def init(player) do
-    {:ok, %Game{player: player}}
+  def init(game_name) do
+    Logger.info("Process created... Game name: #{game_name}")
+    {:ok, %Game{game_name: game_name}}
   end
 
   @impl true
@@ -46,8 +58,9 @@ defmodule Xxo.GameServer do
   end
 
   @impl true
-  def handle_cast({:player_move, player, new_move}, state = %Game{finished: false}) do
-    {:noreply, Map.update!(state, new_move, update_state(state, player, new_move))}
+  def handle_cast({:player_move, player, new_move}, %Game{finished: false} = state) do
+    new_state = Map.replace!(state.board, new_move, player)
+    {:noreply, new_state}
   end
 
   @impl true
@@ -74,12 +87,10 @@ defmodule Xxo.GameServer do
     {:noreply, state}
   end
 
-  #######################################################################
   #####################   Private Functions   ###########################
-  #######################################################################
 
-  defp update_state(state, player, new_move) do
-    board = state.board.positions
-    Map.update!(board, new_move, fn _ -> player end)
+  # Map.update!(board, new_move, fn _ -> player end)
+  defp check_winner(state) do
+    # ..
   end
 end
