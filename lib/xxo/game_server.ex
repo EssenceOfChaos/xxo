@@ -19,7 +19,7 @@ defmodule Xxo.GameServer do
   end
 
   def player_move(game_name, player, square) do
-    GenServer.cast(via_tuple(game_name), {:player_move, player, square})
+    GenServer.call(via_tuple(game_name), {:player_move, player, square})
   end
 
   def get_state(game_name) do
@@ -49,7 +49,7 @@ defmodule Xxo.GameServer do
   @impl true
   def init(game_name) do
     Logger.info("Process created... Game name: #{game_name}")
-    {:ok, %Game{game_name: game_name}}
+    {:ok, %Game{game_name: game_name, action_on: game_name}}
   end
 
   @impl true
@@ -58,9 +58,11 @@ defmodule Xxo.GameServer do
   end
 
   @impl true
-  def handle_cast({:player_move, player, new_move}, %Game{finished: false} = state) do
-    new_state = Map.replace!(state.board, new_move, player)
-    {:noreply, new_state}
+  def handle_call({:player_move, player, new_move}, _from, %Game{finished: false} = state) do
+    update_board = Map.replace!(state.board, new_move, player)
+    new_state = %{state | board: update_board}
+
+    {:reply, {:ok, new_state}, new_state}
   end
 
   @impl true
