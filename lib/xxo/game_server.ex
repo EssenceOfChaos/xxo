@@ -64,7 +64,11 @@ defmodule Xxo.GameServer do
 
     Logger.info("Player #{player} has made a move. Check game status")
 
-    {:reply, {:ok, new_state}, new_state}
+    case check_for_winner(player, new_state) do
+      {:nowinner} -> {:reply, {:ok, new_state}, new_state}
+      {:winner, "x"} -> {:reply, {:game_over, "x won"}, new_state}
+      {:winner, "o"} -> {:reply, {:game_over, "o won"}, new_state}
+    end
   end
 
   @impl true
@@ -93,7 +97,7 @@ defmodule Xxo.GameServer do
 
   #####################   Private Functions   ###########################
 
-  #   defp check_winner(state) do
-  #     State.winner?(state)
-  #   end
+  defp check_for_winner(player, board) do
+    State.winner?(player, board)
+  end
 end
