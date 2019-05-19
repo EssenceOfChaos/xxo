@@ -3,7 +3,7 @@ defmodule Xxo.GameServer do
   The Game module is responsible for starting/stopping new games.
   """
   use GenServer
-  alias Xxo.{Game}
+  alias Xxo.{Game, State}
   require Logger
 
   @game_server_registry :game_server_registry
@@ -62,6 +62,8 @@ defmodule Xxo.GameServer do
     update_board = Map.replace!(state.board, new_move, player)
     new_state = %{state | board: update_board}
 
+    Logger.info("Player #{player} has made a move. Check game status")
+
     {:reply, {:ok, new_state}, new_state}
   end
 
@@ -91,8 +93,7 @@ defmodule Xxo.GameServer do
 
   #####################   Private Functions   ###########################
 
-  # Map.update!(board, new_move, fn _ -> player end)
-  defp check_winner(state) do
-    # ..
-  end
+  #   defp check_winner(state) do
+  #     State.winner?(state)
+  #   end
 end
