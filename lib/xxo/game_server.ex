@@ -18,8 +18,12 @@ defmodule Xxo.GameServer do
     {:via, Registry, {@game_server_registry, game_name}}
   end
 
-  def player_move(game_name, player, square) do
-    GenServer.call(via_tuple(game_name), {:player_move, player, square})
+  def player_move(game_name, symbol, square) do
+    GenServer.call(via_tuple(game_name), {:player_move, symbol, square})
+  end
+
+  def computer_move(game_name, symbol) do
+    GenServer.call(via_tuple(game_name), {:computer_move, symbol})
   end
 
   def get_state(game_name) do
@@ -58,17 +62,36 @@ defmodule Xxo.GameServer do
   end
 
   @impl true
-  def handle_call({:player_move, player, new_move}, _from, %Game{finished: false} = state) do
-    update_board = Map.replace!(state.board, new_move, player)
-    new_state = %{state | board: update_board}
+  def handle_call({:player_move, symbol, new_move}, _from, %Game{finished: false} = state) do
+    update_board = Map.replace!(state.board, new_move, symbol)
+    next_turn = State.next_player(state.game_name)
 
-    Logger.info("Player #{player} has made a move. Check game status")
+    # creating an updated copy of the game state
+    new_state = %{state | board: update_board, action_on: next_turn}
 
-    case check_for_winner(player, new_state) do
+    Logger.info("Player #{symbol} has made a move. Check game status")
+
+    case check_for_winner(symbol, new_state) do
       {:nowinner} -> {:reply, {:ok, new_state}, new_state}
       {:winner, "x"} -> {:reply, {:game_over, "x won"}, new_state}
       {:winner, "o"} -> {:reply, {:game_over, "o won"}, new_state}
     end
+  end
+
+  @impl true
+  def handle_call({:computer_move, symbol}, _from, %Game{finished: false} = state) do
+    # update_board = Map.replace!(state.board, symbol)
+    next_turn = State.next_player(state.game_name)
+
+    # new_state = %{state | board: update_board, action_on: next_turn}
+
+    Logger.info("Player #{symbol} has made a move. Check game status")
+
+    # case check_for_winner(symbol, new_state) do
+    #   {:nowinner} -> {:reply, {:ok, new_state}, new_state}
+    #   {:winner, "x"} -> {:reply, {:game_over, "x won"}, new_state}
+    #   {:winner, "o"} -> {:reply, {:game_over, "o won"}, new_state}
+    # end
   end
 
   @impl true
@@ -97,7 +120,11 @@ defmodule Xxo.GameServer do
 
   #####################   Private Functions   ###########################
 
-  defp check_for_winner(player, board) do
-    State.winner?(player, board)
+  defp check_for_winner(symbol, board) do
+    State.winner?(symbol, board)
+  end
+
+  defp computers_turn(board, symbol) do
+    State.calculate_comp_move(board, symbol)
   end
 end

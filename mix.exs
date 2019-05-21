@@ -27,6 +27,7 @@ defmodule Xxo.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:gen_state_machine, "~> 2.0.5"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
     ]
   end

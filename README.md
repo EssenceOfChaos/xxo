@@ -31,21 +31,20 @@ Retreive the current state of the game by calling `Xxo.GameServer.get_state("nam
 
 ```elixir
 %Xxo.Game{
-  board: %Xxo.Board{
-    positions: %{
-      {0, 0} => " ",
-      {0, 1} => " ",
-      {0, 2} => " ",
-      {1, 0} => " ",
-      {1, 1} => " ",
-      {1, 2} => " ",
-      {2, 0} => " ",
-      {2, 1} => " ",
-      {2, 2} => " "
-    }
+  action_on: "mia",
+  board: %{
+    {0, 0} => " ",
+    {0, 1} => "x",
+    {0, 2} => " ",
+    {1, 0} => " ",
+    {1, 1} => " ",
+    {1, 2} => " ",
+    {2, 0} => " ",
+    {2, 1} => " ",
+    {2, 2} => " "
   },
   finished: false,
-  player: "name",
+  game_name: "mia",
   winner: nil
 }
 ```
