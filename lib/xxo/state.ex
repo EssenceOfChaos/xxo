@@ -3,7 +3,7 @@ defmodule Xxo.State do
   This module is used to track game state and declare when a user has won/lost.
   """
   require Logger
-  alias Xxo.Game
+  #   alias Xxo.Game
 
   @doc """
   Checks if there are 3 symbols in a row
@@ -18,15 +18,8 @@ defmodule Xxo.State do
   @doc """
   Returns the next player to move
   """
-  def next_player(%Game{action_on: "computer"} = state), do: state.game_name
-  def next_player(%Game{action_on: _} = state), do: "computer"
-
-  #   def calculate_comp_move(board, symbol) do
-  #     case Enum.find_index(board, fn square -> " " end) do
-  #       board[square] -> Map.replace!(board, square, symbol)
-  #       nil -> :draw
-  #     end
-  #   end
+  def next_player(game_name) when game_name === "computer", do: game_name
+  def next_player(game_name) when is_binary(game_name), do: "computer"
 
   ### Top row win
   defp won(
@@ -41,7 +34,7 @@ defmodule Xxo.State do
            {2, 0} => _,
            {2, 1} => _,
            {2, 2} => _
-         } = board
+         } = _board
        ),
        do: {:winner, player}
 
@@ -58,7 +51,7 @@ defmodule Xxo.State do
            {2, 0} => _,
            {2, 1} => _,
            {2, 2} => _
-         } = board
+         } = _board
        ),
        do: {:winner, player}
 

@@ -3,7 +3,7 @@ defmodule Xxo.GameServer do
   The Game module is responsible for starting/stopping new games.
   """
   use GenServer
-  alias Xxo.{Game, State}
+  alias Xxo.{Game, State, AI}
   require Logger
 
   @game_server_registry :game_server_registry
@@ -80,18 +80,18 @@ defmodule Xxo.GameServer do
 
   @impl true
   def handle_call({:computer_move, symbol}, _from, %Game{finished: false} = state) do
-    # update_board = Map.replace!(state.board, symbol)
+    update_board = computers_turn(state.board, "o")
     next_turn = State.next_player(state.game_name)
 
-    # new_state = %{state | board: update_board, action_on: next_turn}
+    new_state = %{state | board: update_board, action_on: next_turn}
 
     Logger.info("Player #{symbol} has made a move. Check game status")
 
-    # case check_for_winner(symbol, new_state) do
-    #   {:nowinner} -> {:reply, {:ok, new_state}, new_state}
-    #   {:winner, "x"} -> {:reply, {:game_over, "x won"}, new_state}
-    #   {:winner, "o"} -> {:reply, {:game_over, "o won"}, new_state}
-    # end
+    case check_for_winner(symbol, new_state) do
+      {:nowinner} -> {:reply, {:ok, new_state}, new_state}
+      {:winner, "x"} -> {:reply, {:game_over, "x won"}, new_state}
+      {:winner, "o"} -> {:reply, {:game_over, "o won"}, new_state}
+    end
   end
 
   @impl true
@@ -125,6 +125,6 @@ defmodule Xxo.GameServer do
   end
 
   defp computers_turn(board, symbol) do
-    State.calculate_comp_move(board, symbol)
+    AI.calculate_move(board, symbol)
   end
 end

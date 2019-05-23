@@ -4,6 +4,8 @@
 
 A tic-tac-toe game engine written in Elixir.
 
+This is an MVP. My intention is to build a working product and then improve upon it on each iteration.
+
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
