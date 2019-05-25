@@ -5,17 +5,17 @@ defmodule Xxo.AI do
 
   #   %Xxo.Game{
   #     action_on: "mia",
-  #   board: %{
-  #     {0, 0} => " ",
-  #     {0, 1} => "x",
-  #     {0, 2} => " ",
-  #     {1, 0} => " ",
-  #     {1, 1} => " ",
-  #     {1, 2} => " ",
-  #     {2, 0} => " ",
-  #     {2, 1} => " ",
-  #     {2, 2} => " "
-  #   },
+  # board: %{
+  #   {0, 0} => " ",
+  #   {0, 1} => "x",
+  #   {0, 2} => " ",
+  #   {1, 0} => " ",
+  #   {1, 1} => " ",
+  #   {1, 2} => " ",
+  #   {2, 0} => " ",
+  #   {2, 1} => " ",
+  #   {2, 2} => " "
+  # },
   #     finished: false,
   #     game_name: "mia",
   #     winner: nil
@@ -29,12 +29,24 @@ defmodule Xxo.AI do
 
   # To start, return ANY valid move, then improve later
   defp find_best_move(board, symbol) do
-    square = Enum.find_index(board, fn {_k, v} -> v === " " end)
+    square =
+      board
+      |> Enum.filter(&(elem(&1, 1) === " "))
+      |> Enum.random()
+      |> elem(0)
 
-    if square == nil do
-      {:error, :draw}
-    end
-
-    Map.replace!(board, board[square], symbol)
+    Map.replace!(board, square, symbol)
   end
+
+  #     board = %{
+  #     {0, 0} => " ",
+  #     {0, 1} => "x",
+  #     {0, 2} => " ",
+  #     {1, 0} => " ",
+  #     {1, 1} => " ",
+  #     {1, 2} => " ",
+  #     {2, 0} => " ",
+  #     {2, 1} => " ",
+  #     {2, 2} => " "
+  #   }
 end
