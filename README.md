@@ -26,7 +26,7 @@ by adding `xxo` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:xxo, "~> 0.1.0"}
+    {:xxo, "~> 1.0.0"}
   ]
 end
 ```

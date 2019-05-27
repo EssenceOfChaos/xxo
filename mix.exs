@@ -4,13 +4,13 @@ defmodule Xxo.MixProject do
   """
   use Mix.Project
 
-  @version "0.1.0"
+  @version "1.0.0"
 
   def project do
     [
       app: :xxo,
       version: @version,
-      elixir: "~> 1.8",
+      elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       description: "Xxo provides the game logic for tic-tac-toe",
