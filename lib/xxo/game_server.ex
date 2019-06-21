@@ -80,7 +80,7 @@ defmodule Xxo.GameServer do
 
   @impl true
   def handle_call({:computer_move, symbol}, _from, %Game{finished: false} = state) do
-    update_board = computers_turn(state.board, "o")
+    update_board = computers_turn(state.board, "x")
     next_turn = State.next_player(state.game_name)
 
     new_state = %{state | board: update_board, action_on: next_turn}
@@ -89,8 +89,8 @@ defmodule Xxo.GameServer do
 
     case check_for_winner(symbol, new_state) do
       {:nowinner} -> {:reply, {:ok, new_state}, new_state}
-      {:winner, "x"} -> {:reply, {:game_over, "x won"}, new_state}
-      {:winner, "o"} -> {:reply, {:game_over, "o won"}, new_state}
+      {:winner, "x"} -> {:reply, {:game_over, "computer wins!"}, new_state}
+      {:winner, "o"} -> {:reply, {:game_over, "user wins!"}, new_state}
     end
   end
 
