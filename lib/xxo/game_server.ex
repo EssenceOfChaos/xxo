@@ -73,8 +73,8 @@ defmodule Xxo.GameServer do
 
     case check_for_winner(symbol, new_state) do
       {:nowinner} -> {:reply, {:ok, new_state}, new_state}
-      {:winner, "x"} -> {:reply, {:game_over, "x won"}, new_state}
-      {:winner, "o"} -> {:reply, {:game_over, "o won"}, new_state}
+      {:winner, "x"} -> {:reply, {:game_over, "Computer Wins!"}, new_state}
+      {:winner, _} -> {:reply, {:game_over, "Player #{symbol} Wins!"}, new_state}
     end
   end
 
@@ -89,8 +89,8 @@ defmodule Xxo.GameServer do
 
     case check_for_winner(symbol, new_state) do
       {:nowinner} -> {:reply, {:ok, new_state}, new_state}
-      {:winner, "x"} -> {:reply, {:game_over, "computer wins!"}, new_state}
-      {:winner, "o"} -> {:reply, {:game_over, "user wins!"}, new_state}
+      {:winner, "x"} -> {:reply, {:game_over, "Computer Wins!"}, new_state}
+      {:winner, _} -> {:reply, {:game_over, "Player #{symbol} Wins!"}, new_state}
     end
   end
 
@@ -107,7 +107,7 @@ defmodule Xxo.GameServer do
   @impl true
   def terminate(reason, stats) do
     # We could write to a file, database etc
-    IO.puts("server terminated because of #{inspect(reason)}")
+    IO.puts("Server terminated because of #{inspect(reason)}")
     inspect(stats)
     :ok
   end
