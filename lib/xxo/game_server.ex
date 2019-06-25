@@ -72,9 +72,16 @@ defmodule Xxo.GameServer do
     Logger.info("Player #{symbol} has made a move. Check game status")
 
     case check_for_winner(symbol, new_state) do
-      {:nowinner} -> {:reply, {:ok, new_state}, new_state}
-      {:winner, "x"} -> {:reply, {:game_over, "Computer Wins!"}, new_state}
-      {:winner, _} -> {:reply, {:game_over, "Player #{symbol} Wins!"}, new_state}
+      {:nowinner} ->
+        {:reply, {:ok, new_state}, new_state}
+
+      {:winner, "x"} ->
+        {:reply, {:game_over, "Computer Wins!"},
+         %{new_state | finished: true, winner: "Computer"}}
+
+      {:winner, _} ->
+        {:reply, {:game_over, "Player #{symbol} Wins!"},
+         %{new_state | finished: true, winner: "#{symbol}"}}
     end
   end
 
@@ -88,9 +95,16 @@ defmodule Xxo.GameServer do
     Logger.info("Player #{symbol} has made a move. Check game status")
 
     case check_for_winner(symbol, new_state) do
-      {:nowinner} -> {:reply, {:ok, new_state}, new_state}
-      {:winner, "x"} -> {:reply, {:game_over, "Computer Wins!"}, new_state}
-      {:winner, _} -> {:reply, {:game_over, "Player #{symbol} Wins!"}, new_state}
+      {:nowinner} ->
+        {:reply, {:ok, new_state}, new_state}
+
+      {:winner, "x"} ->
+        {:reply, {:game_over, "Computer Wins!"},
+         %{new_state | finished: true, winner: "Computer"}}
+
+      {:winner, _} ->
+        {:reply, {:game_over, "Player #{symbol} Wins!"},
+         %{new_state | finished: true, winner: "#{symbol}"}}
     end
   end
 

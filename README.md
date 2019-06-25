@@ -66,18 +66,21 @@ Retrieve the current state of the game by calling `Xxo.GameServer.get_state("nam
 Here is an example game played with version 1:
 
 ```elixir
-iex(4)> Xxo.new_game("mia")
+Erlang/OTP 21 [erts-10.3.4] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:1] [hipe] [dtrace]
 
-16:18:54.214 [info]  Process created... Game name: mia
-{:ok, #PID<0.209.0>}
-iex(5)> GameServer.player_move("mia", "x", {0, 0})
+Interactive Elixir (1.8.1) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> Xxo.new_game("mia")
 
-16:19:15.130 [info]  Player x has made a move. Check game status
+17:31:10.564 [info]  Process created... Game name: mia
+{:ok, #PID<0.188.0>}
+iex(2)> GameServer.player_move("mia", "o", {0, 0})
+
+17:31:19.574 [info]  Player o has made a move. Check game status
 {:ok,
  %Xxo.Game{
    action_on: "computer",
    board: %{
-     {0, 0} => "x",
+     {0, 0} => "o",
      {0, 1} => " ",
      {0, 2} => " ",
      {1, 0} => " ",
@@ -91,74 +94,71 @@ iex(5)> GameServer.player_move("mia", "x", {0, 0})
    game_name: "mia",
    winner: nil
  }}
-iex(6)> GameServer.computer_move("mia", "o")
+iex(3)> GameServer.computer_move("mia", "x")
 
-16:23:18.698 [info]  Player o has made a move. Check game status
+17:31:33.904 [info]  Player x has made a move. Check game status
 {:ok,
  %Xxo.Game{
    action_on: "computer",
    board: %{
-     {0, 0} => "x",
-     {0, 1} => "o",
+     {0, 0} => "o",
+     {0, 1} => " ",
      {0, 2} => " ",
      {1, 0} => " ",
      {1, 1} => " ",
      {1, 2} => " ",
      {2, 0} => " ",
-     {2, 1} => " ",
+     {2, 1} => "x",
      {2, 2} => " "
    },
    finished: false,
    game_name: "mia",
    winner: nil
  }}
-iex(7)> GameServer.player_move("mia", "x", {1, 1})
-
-16:25:11.176 [info]  Player x has made a move. Check game status
+iex(4)> GameServer.player_move("mia", "o", {1, 1})
 {:ok,
  %Xxo.Game{
    action_on: "computer",
    board: %{
-     {0, 0} => "x",
-     {0, 1} => "o",
+     {0, 0} => "o",
+     {0, 1} => " ",
      {0, 2} => " ",
      {1, 0} => " ",
-     {1, 1} => "x",
+     {1, 1} => "o",
      {1, 2} => " ",
      {2, 0} => " ",
-     {2, 1} => " ",
+     {2, 1} => "x",
      {2, 2} => " "
    },
    finished: false,
    game_name: "mia",
    winner: nil
  }}
-iex(8)> GameServer.computer_move(mia, "o")
-** (CompileError) iex:8: undefined function mia/0
-    (stdlib) lists.erl:1354: :lists.mapfoldl/3
-iex(8)> GameServer.computer_move("mia", "o")
+iex(5)>
+17:31:47.127 [info]  Player o has made a move. Check game status
+GameServer.computer_move("mia", "x")
 
-16:25:59.249 [info]  Player o has made a move. Check game status
+17:32:38.338 [info]  Player x has made a move. Check game status
 {:ok,
  %Xxo.Game{
    action_on: "computer",
    board: %{
-     {0, 0} => "x",
-     {0, 1} => "o",
-     {0, 2} => "o",
+     {0, 0} => "o",
+     {0, 1} => " ",
+     {0, 2} => " ",
      {1, 0} => " ",
-     {1, 1} => "x",
+     {1, 1} => "o",
      {1, 2} => " ",
-     {2, 0} => " ",
-     {2, 1} => " ",
+     {2, 0} => "x",
+     {2, 1} => "x",
      {2, 2} => " "
    },
    finished: false,
    game_name: "mia",
    winner: nil
  }}
-iex(9)> GameServer.player_move("mia", "x", {2, 2})
+iex(6)> GameServer.player_move("mia", "o", {2, 2})
 
-16:28:06.770 [info]  Player x has made a move. Check game status
-{:game_over, "x won"}
+17:33:01.246 [info]  Player o has made a move. Check game status
+{:game_over, "Player o Wins!"}
 ```
