@@ -12,15 +12,6 @@ defmodule Xxo.State do
     won(symbol, state.board)
   end
 
-  #########################################################
-  # Next Player
-  #########################################################
-  @doc """
-  Returns the next player to move
-  """
-  def next_player(game_name) when game_name === "computer", do: game_name
-  def next_player(game_name) when is_binary(game_name), do: "computer"
-
   ### Top row win
   defp won(
          player,

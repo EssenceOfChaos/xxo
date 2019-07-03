@@ -64,7 +64,7 @@ defmodule Xxo.GameServer do
   @impl true
   def handle_call({:player_move, symbol, new_move}, _from, %Game{finished: false} = state) do
     update_board = Map.replace!(state.board, new_move, symbol)
-    next_turn = State.next_player(state.game_name)
+    next_turn = "computer"
 
     # creating an updated copy of the game state
     new_state = %{state | board: update_board, action_on: next_turn}
@@ -80,15 +80,15 @@ defmodule Xxo.GameServer do
          %{new_state | finished: true, winner: "Computer"}}
 
       {:winner, _} ->
-        {:reply, {:game_over, "Player #{symbol} Wins!"},
-         %{new_state | finished: true, winner: "#{symbol}"}}
+        {:reply, {:game_over, "Player #{state.game_name} Wins!"},
+         %{new_state | finished: true, winner: "#{state.game_name}"}}
     end
   end
 
   @impl true
   def handle_call({:computer_move, symbol}, _from, %Game{finished: false} = state) do
     update_board = computers_turn(state.board, "x")
-    next_turn = State.next_player(state.game_name)
+    next_turn = state.game_name
 
     new_state = %{state | board: update_board, action_on: next_turn}
 
@@ -103,8 +103,8 @@ defmodule Xxo.GameServer do
          %{new_state | finished: true, winner: "Computer"}}
 
       {:winner, _} ->
-        {:reply, {:game_over, "Player #{symbol} Wins!"},
-         %{new_state | finished: true, winner: "#{symbol}"}}
+        {:reply, {:game_over, "Player #{state.game_name} Wins!"},
+         %{new_state | finished: true, winner: "#{state.game_name}"}}
     end
   end
 
