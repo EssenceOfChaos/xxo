@@ -4,7 +4,7 @@ defmodule Xxo.MixProject do
   """
   use Mix.Project
 
-  @version "1.1.2"
+  @version "1.1.3"
 
   def project do
     [
